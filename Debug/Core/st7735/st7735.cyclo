@@ -1,0 +1,17 @@
+../Core/st7735/st7735.c:79:6:ST7735_Select	1
+../Core/st7735/st7735.c:84:6:ST7735_Unselect	1
+../Core/st7735/st7735.c:89:13:ST7735_WriteCommand	1
+../Core/st7735/st7735.c:104:13:ST7735_WriteData	2
+../Core/st7735/st7735.c:120:13:ST7735_ExecuteCommandList	5
+../Core/st7735/st7735.c:145:13:ST7735_SetAddressWindow	1
+../Core/st7735/st7735.c:166:6:ST7735_DrawPixel	3
+../Core/st7735/st7735.c:181:6:ST7735_Init	1
+../Core/st7735/st7735.c:192:13:ST7735_WriteChar	4
+../Core/st7735/st7735.c:212:6:ST7735_WriteString	5
+../Core/st7735/st7735.c:238:6:ST7735_FillRectangle	7
+../Core/st7735/st7735.c:267:6:ST7735_FillRectangleFast	7
+../Core/st7735/st7735.c:287:6:ST7735_FillScreen	1
+../Core/st7735/st7735.c:291:6:ST7735_FillScreenFast	1
+../Core/st7735/st7735.c:295:6:ST7735_DrawImage	5
+../Core/st7735/st7735.c:306:6:ST7735_InvertColors	2
+../Core/st7735/st7735.c:312:6:ST7735_SetGamma	1
