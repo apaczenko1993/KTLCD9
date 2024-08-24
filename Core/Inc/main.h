@@ -65,6 +65,8 @@ void Error_Handler(void);
 #define DOWN_GPIO_Port GPIOC
 #define ON_Pin GPIO_PIN_4
 #define ON_GPIO_Port GPIOA
+#define T3_Pin GPIO_PIN_5
+#define T3_GPIO_Port GPIOA
 #define SEL_Pin GPIO_PIN_6
 #define SEL_GPIO_Port GPIOA
 #define BACKLIGHT_Pin GPIO_PIN_7

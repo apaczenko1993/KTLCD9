@@ -25,6 +25,7 @@
 #include <../st7735/st7735.h>
 #include "../st7735/fonts.h"
 #include "../st7735/testimg.h"
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +52,7 @@
 
 int a=5;
 int b=5;
+bool state;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -61,6 +63,8 @@ int b=5;
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim1;
 
+UART_HandleTypeDef huart1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -69,6 +73,7 @@ TIM_HandleTypeDef htim1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -115,6 +120,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_GPIO_WritePin(ON_GPIO_Port, ON_Pin, GPIO_PIN_SET); // zalaczenie zasilania
@@ -136,10 +142,10 @@ int main(void)
 
 
   //ST7735_DrawImage(0, 0, 128, 128, (uint16_t*)test_img_128x128);
-  K1:
   ST7735_FillScreenFast(ST7735_BLACK);
-  ST7735_WriteString(0, 0, "MAGENTA", Font_11x18, ST7735_MAGENTA, ST7735_BLACK);
+  //ST7735_WriteString(0, 0, "MAGENTA", Font_11x18, ST7735_MAGENTA, ST7735_BLACK);
   HAL_Delay(2500);
+  state = false;
 
 
   /* USER CODE END 2 */
@@ -148,19 +154,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(a<90){
-	  		a++;
-	  	}
-	  	else{
-	  		a=5;
-	  		ST7735_FillScreen(ST7735_BLACK);
-	  		HAL_Delay(1000);
-	  		goto K1;
-	  	}
+	  if(state){
+	  	ST7735_FillRectangleFast(10, 10, 40, 40, ST7735_BLUE);
+	  	ST7735_FillRectangleFast(100, 0, 20, 20, ST7735_RED);
+	  }
+	  else{
+		ST7735_FillRectangleFast(10, 10, 40, 40, ST7735_GREEN);
+		ST7735_FillRectangleFast(100, 0, 20, 20, ST7735_MAGENTA);
 
-	  	ST7735_FillRectangle(a, 47, 30, 30, ST7735_BLUE);
-	  	ST7735_FillRectangle(a, 85, 30, 30, ST7735_RED);
-	  	HAL_Delay(20);
+	  }
+	  state=!state;
+	  ST7735_WriteString(70, 100, "MAGENTA", Font_11x18, ST7735_MAGENTA, ST7735_BLACK);
+	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -253,6 +258,39 @@ static void MX_TIM1_Init(void)
 }
 
 /**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -274,7 +312,7 @@ static void MX_GPIO_Init(void)
                           |LCD_WR_Pin|LCD_RS_Pin|LCD_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, ON_Pin|BACKLIGHT_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, ON_Pin|T3_Pin|BACKLIGHT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
@@ -293,8 +331,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ON_Pin BACKLIGHT_Pin */
-  GPIO_InitStruct.Pin = ON_Pin|BACKLIGHT_Pin;
+  /*Configure GPIO pins : ON_Pin T3_Pin BACKLIGHT_Pin */
+  GPIO_InitStruct.Pin = ON_Pin|T3_Pin|BACKLIGHT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
